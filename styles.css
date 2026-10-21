@@ -295,6 +295,34 @@ body[data-theme=light] .nav-item.active,body[data-theme=light] .filter-tab.selec
  .timer-wrap,.timer-ring{width:154px;height:154px}
 }
 
+/* Compact task rows and keep the workload cards usable on narrow screens. */
+.task-row{grid-template-columns:20px minmax(0,1fr) max-content 48px;gap:8px;padding:9px 3px}
+.task-main,.task-title,.task-meta{min-width:0}
+.task-title{display:flex;align-items:flex-start;flex-wrap:wrap;gap:4px 7px;line-height:1.35;overflow-wrap:anywhere}
+.task-meta{display:flex;flex-wrap:wrap;gap:3px 9px;margin-top:4px}
+.task-actions{width:48px;min-width:48px;gap:2px;opacity:1}
+.task-actions .tiny-action{width:23px;min-width:23px;height:30px}
+.task-row:hover{transform:none}
+.task-row:focus-within{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.task-actions .tiny-action:focus-visible{position:relative;z-index:1;outline-offset:1px}
+.priority-lane.drag-over,body[data-theme="light"] .priority-lane.drag-over{transform:none;box-shadow:inset 0 0 0 1px var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--panel))}
+.board-task[draggable="true"]:active{transform:scale(.995)}
+@media(max-width:650px){
+ .right-column{grid-template-columns:minmax(0,1fr);gap:12px}
+ .task-row{grid-template-columns:19px minmax(0,1fr) max-content 46px;gap:7px;padding:8px 1px}
+ .task-actions{width:46px;min-width:46px}
+ .task-actions .tiny-action{width:22px;min-width:22px}
+}
+@media(max-width:390px){
+ .task-row{grid-template-columns:18px minmax(0,1fr) 44px;gap:6px;padding:8px 0}
+ .task-row>.priority-pill{grid-column:2;grid-row:2;justify-self:start;margin-top:2px}
+ .task-row>.task-actions{grid-column:3;grid-row:1/3;align-self:center;width:44px;min-width:44px}
+ .task-actions .tiny-action{width:21px;min-width:21px}
+}
+@media(prefers-reduced-motion:reduce){
+ .task-row:hover,.board-task[draggable="true"]:active{transform:none}
+}
+
 
 /* Laptop summary grouping: related counts share one row when space permits. */
 .overview-summary{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(340px,.9fr);align-items:stretch;gap:14px;margin:0 0 13px}

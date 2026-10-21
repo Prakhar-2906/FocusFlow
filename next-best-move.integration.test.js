@@ -103,22 +103,26 @@ test("Rescue My Day and Next Best Move share deadline ranking",()=>{
 });
 
 test("workload radar switches to month view and navigates months",()=>{
-  const task={id:"month-task",title:"Month task",subject:"Math",due:"2026-10-21",priority:"high",duration:90,done:false};
+  const today=new Date(),due=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-");
+  const nextMonth=new Date(today.getFullYear(),today.getMonth()+1,1,12);
+  const monthTitle=date=>new Intl.DateTimeFormat("en-US",{month:"long",year:"numeric"}).format(date);
+  const task={id:"month-task",title:"Month task",subject:"Math",due,priority:"high",duration:90,done:false};
   const {elements}=boot(task);
   assert.equal(elements.get("radar-view").value,"week");
   elements.get("radar-view").value="month";
   elements.get("radar-view").handlers.change({target:elements.get("radar-view")});
   assert.match(elements.get("radar-chart").innerHTML,/class="month-day/);
   assert.equal((elements.get("radar-chart").innerHTML.match(/class="month-day [^"]*"/g)||[]).length,42);
-  assert.match(elements.get("radar-month-title").textContent,/October 2026/);
+  assert.equal(elements.get("radar-month-title").textContent,monthTitle(today));
   assert.match(elements.get("pressure-details").innerHTML,/Month task/);
-  elements.get("radar-chart").handlers.click({target:{closest:()=>({dataset:{pressureDate:"2026-10-10"}})}});
-  assert.match(elements.get("pressure-details").innerHTML,/Oct 10/);
-  elements.get("radar-chart").handlers.click({target:{closest:()=>({dataset:{pressureDate:"2026-10-21"}})}});
+  const tenth=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),"10"].join("-");
+  elements.get("radar-chart").handlers.click({target:{closest:()=>({dataset:{pressureDate:tenth}})}});
+  assert.match(elements.get("pressure-details").innerHTML,/10,/);
+  elements.get("radar-chart").handlers.click({target:{closest:()=>({dataset:{pressureDate:due}})}});
   elements.get("radar-next-month").click();
-  assert.match(elements.get("radar-month-title").textContent,/November 2026/);
+  assert.equal(elements.get("radar-month-title").textContent,monthTitle(nextMonth));
   elements.get("radar-prev-month").click();
-  assert.match(elements.get("radar-month-title").textContent,/October 2026/);
+  assert.equal(elements.get("radar-month-title").textContent,monthTitle(today));
   elements.get("radar-view").value="week";
   elements.get("radar-view").handlers.change({target:elements.get("radar-view")});
   assert.match(elements.get("radar-chart").innerHTML,/class="pressure-day/);
