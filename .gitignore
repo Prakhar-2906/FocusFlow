@@ -1,0 +1,10 @@
+# FocusFlow exports can contain personal assignment and study history data.
+focusflow-backup-*.json
+
+# Local editor workspace settings and operating-system metadata.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.code-workspace
